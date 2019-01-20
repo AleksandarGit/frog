@@ -68,9 +68,10 @@ namespace Treehouse.FitnessFrog.Data
             int nextAvailableEntryId = Data.Entries
                 .Max(e => e.Id) + 1;
 
-            entry.Id = nextAvailableEntryId;
+            Entry newEntry = entry;
+            newEntry.Id = nextAvailableEntryId;
 
-            Data.Entries.Add(entry);
+            Data.Entries.Add(newEntry);
         }
 
         /// <summary>
