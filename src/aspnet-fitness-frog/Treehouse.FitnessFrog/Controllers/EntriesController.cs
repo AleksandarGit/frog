@@ -77,7 +77,35 @@ namespace Treehouse.FitnessFrog.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            return View();
+            Entry entry = _entriesRepository.GetEntry((int)id);
+
+            if (entry == null)
+            {
+                return HttpNotFound();
+            }
+
+            SetupActivitiesSelectListItems();
+
+            return View(entry);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(Entry entry)
+        {
+            ValidateEntry(entry);
+
+            if (ModelState.IsValid)
+            {
+                _entriesRepository.UpdateEntry(entry);
+
+                TempData["Message"] = "Your entry was successfully updated!";
+
+                return RedirectToAction("Index");
+            }
+
+            SetupActivitiesSelectListItems();
+
+            return View(entry);
         }
 
         public ActionResult Delete(int? id)
@@ -87,7 +115,24 @@ namespace Treehouse.FitnessFrog.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            return View();
+            Entry entry = _entriesRepository.GetEntry((int)id);
+
+            if (entry == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(entry);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            _entriesRepository.DeleteEntry(id);
+
+            TempData["Message"] = "Your entry was successfully deleted!";
+
+            return RedirectToAction("Index");
         }
 
         private void ValidateEntry(Entry entry)
